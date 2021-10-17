@@ -1,15 +1,16 @@
 import os
-from onnxruntime.transformers.gpt2_helper import Gpt2Helper, MyGPT2LMHeadModel
-from transformers import AutoConfig, AutoTokenizer
+#from onnxruntime.transformers.gpt2_helper import Gpt2Helper, MyGPT2LMHeadModel
+from transformers import AutoConfig, AutoTokenizer, GPT2LMHeadModel
 import torch
 
 cache_dir = os.path.join(".", "cache_models")
 if not os.path.exists(cache_dir):
     os.makedirs(cache_dir)
 
-model_name_or_path = "models/hf-gpt2"
+#model_name_or_path = "models/hf-gpt2"
+model_name_or_path = "gpt2"
 config = AutoConfig.from_pretrained(model_name_or_path, cache_dir=cache_dir)
-model = MyGPT2LMHeadModel.from_pretrained(model_name_or_path, config=config, cache_dir=cache_dir)
+model = GPT2LMHeadModel.from_pretrained(model_name_or_path, config=config, cache_dir=cache_dir)
 device = torch.device("cpu")
 model.eval().to(device)
 
@@ -87,12 +88,7 @@ def test_generation(tokenizer, model, input_text, num_tokens_to_produce = 30):
 
     return generated_text       
 
-
-from transformers import GPT2LMHeadModel
 tokenizer = get_tokenizer(model_name_or_path, cache_dir)
-model = GPT2LMHeadModel.from_pretrained(model_name_or_path, config=config, cache_dir=cache_dir)
-device = torch.device("cpu")
-model.eval().to(device)
 
 #TODO input to endpoint
 prompts = ['best hotel in bay area', 'here is an example of gpt2 model']
@@ -103,6 +99,19 @@ with torch.no_grad():
 
 print(f'Generated text = {generated_text}')    
 
+#from transformers import GPT2LMHeadModel
+#torch_model = GPT2LMHeadModel.from_pretrained(model_name_or_path, config=config, cache_dir=cache_dir)
+#device = torch.device("cpu")
+#torch_model.eval().to(device)
+
+#input_ids, attention_mask, position_ids, empty_past = preprocess(tokenizer, prompts)
+#print("input_ids", input_ids)
+#print("attention_mask", attention_mask)
+#print("position_ids", position_ids)
+
+#with torch.no_grad():
+#    torch_output = torch_model(input_ids, past=empty_past, attention_mask=attention_mask, position_ids=position_ids)
   
+
 
 
